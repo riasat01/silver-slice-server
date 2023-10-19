@@ -27,20 +27,24 @@ async function run() {
 
     const database = client.db('SilverSlice');
     
-    app.get('/banner', async (req, res) => {
-        const banner = database.collection('headerInfo');
-        const query = {name: "banner"};
-        const result = await banner.findOne(query);
-        // console.log(result);
-        res.send(result);
-
-    })
-
     app.get('/brands', async (req, res) => {
         const banner = database.collection('headerInfo');
         const cursor = banner.find();
         const results = await cursor.toArray();
         const result = results.filter(item => item.name !== 'banner');
+        // console.log(result);
+        res.send(result);
+
+    })
+
+    app.get('/brands/:name', async (req, res) => {
+        const name = req.params.name
+        console.log(name);
+        const banner = database.collection('headerInfo');
+        const query = {name : name};
+        const result = await banner.findOne(query);
+        // const results = await cursor.toArray();
+        // const result = results.filter(item => item.name !== 'banner');
         console.log(result);
         res.send(result);
 
