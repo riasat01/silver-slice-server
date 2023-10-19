@@ -31,6 +31,16 @@ async function run() {
         const banner = database.collection('headerInfo');
         const query = {name: "banner"};
         const result = await banner.findOne(query);
+        // console.log(result);
+        res.send(result);
+
+    })
+
+    app.get('/brands', async (req, res) => {
+        const banner = database.collection('headerInfo');
+        const cursor = banner.find();
+        const results = await cursor.toArray();
+        const result = results.filter(item => item.name !== 'banner');
         console.log(result);
         res.send(result);
 
