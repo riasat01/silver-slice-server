@@ -81,6 +81,30 @@ async function run() {
 
     })
 
+    app.put('/product-details/:id', async (req, res) => {
+        const id = req.params.id
+        const product = req.body;
+        // console.log(product);
+        const banner = database.collection('products');
+        const filter = {_id: new ObjectId(id)}
+        const options = {upsert: false};
+        const updatedProduct = {
+          $set: {
+            photo: product.photo,
+            name: product.name,
+            brand: product.brand,
+            type: product.type,
+            price: product.price,
+            rating: product.rating,
+            description: product.description
+          }
+        }
+        const result = await banner.updateOne(filter, updatedProduct, options);
+        // console.log(result);
+        res.send(result);
+
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
