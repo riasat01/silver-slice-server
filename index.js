@@ -43,9 +43,29 @@ async function run() {
         const banner = database.collection('headerInfo');
         const query = {name : name};
         const result = await banner.findOne(query);
-        // const results = await cursor.toArray();
-        // const result = results.filter(item => item.name !== 'banner');
+        // console.log(result);
+        res.send(result);
+
+    })
+
+    app.get('/products/:name', async (req, res) => {
+        const name = req.params.name
+        console.log(name);
+        const banner = database.collection('products');
+        const query = {brand : name};
+        const cursor = banner.find(query);
+        const result = await cursor.toArray();
         console.log(result);
+        res.send(result);
+
+    })
+
+    app.post('/products/:name', async (req, res) => {
+        const product = req.body
+        console.log(product);
+        const banner = database.collection('products');
+        const result = await banner.insertOne(product);
+        // console.log(result);
         res.send(result);
 
     })
