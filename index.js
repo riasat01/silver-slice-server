@@ -40,9 +40,9 @@ async function run() {
     app.get('/brands/:name', async (req, res) => {
       const name = req.params.name
       // console.log(name);
-      const banner = database.collection('headerInfo');
+      const brands = database.collection('headerInfo');
       const query = { name: name };
-      const result = await banner.findOne(query);
+      const result = await brands.findOne(query);
       // console.log(result);
       res.send(result);
 
@@ -51,9 +51,9 @@ async function run() {
     app.get('/products/:name', async (req, res) => {
       const name = req.params.name
       // console.log(name);
-      const banner = database.collection('products');
+      const products = database.collection('products');
       const query = { brand: name };
-      const cursor = banner.find(query);
+      const cursor = products.find(query);
       const result = await cursor.toArray();
       // console.log(result);
       res.send(result);
@@ -63,8 +63,8 @@ async function run() {
     app.post('/products/:name', async (req, res) => {
       const product = req.body
       // console.log(product);
-      const banner = database.collection('products');
-      const result = await banner.insertOne(product);
+      const products = database.collection('products');
+      const result = await products.insertOne(product);
       // console.log(result);
       res.send(result);
 
@@ -73,9 +73,9 @@ async function run() {
     app.get('/product-details/:id', async (req, res) => {
       const product = req.params.id
       // console.log(product);
-      const banner = database.collection('products');
+      const productDetails = database.collection('products');
       const query = { _id: new ObjectId(product) }
-      const result = await banner.findOne(query);
+      const result = await productDetails.findOne(query);
       // console.log(result);
       res.send(result);
 
@@ -85,7 +85,7 @@ async function run() {
       const id = req.params.id
       const product = req.body;
       // console.log(product);
-      const banner = database.collection('products');
+      const productDetails = database.collection('products');
       const filter = { _id: new ObjectId(id) }
       const options = { upsert: false };
       const updatedProduct = {
@@ -99,7 +99,7 @@ async function run() {
           description: product.description
         }
       }
-      const result = await banner.updateOne(filter, updatedProduct, options);
+      const result = await productDetails.updateOne(filter, updatedProduct, options);
       // console.log(result);
       res.send(result);
 
@@ -108,9 +108,9 @@ async function run() {
     app.get('/cart/:email', async (req, res) => {
       const email = req.params.email
       // console.log(name);
-      const banner = database.collection('cart');
+      const cart = database.collection('cart');
       const query = { email: email };
-      const cursor = banner.find(query);
+      const cursor = cart.find(query);
       const result = await cursor.toArray();
       // console.log(result);
       res.send(result);
@@ -121,8 +121,8 @@ async function run() {
       const email = req.params.email;
       const product = req.body;
       // console.log(product);
-      const banner = database.collection('cart');
-      const result = await banner.insertOne(product);
+      const cart = database.collection('cart');
+      const result = await cart.insertOne(product);
       // console.log(result);
       res.send(result);
 
@@ -131,10 +131,19 @@ async function run() {
     app.delete('/cart/:id', async (req, res) => {
       const id = req.params.id;
       // console.log(id);
-      const banner = database.collection('cart');
+      const cart = database.collection('cart');
       const query = {_id: id}
-      const result = await banner.deleteOne(query);
+      const result = await cart.deleteOne(query);
       // console.log(result);
+      res.send(result);
+
+    })
+
+    app.get('/reviews', async (req, res) => {
+      const reviews = database.collection('reviews');
+      const result = await reviews.findOne();
+      // const results = await cursor.toArray();
+      console.log(result);
       res.send(result);
 
     })
