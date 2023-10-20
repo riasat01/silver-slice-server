@@ -26,82 +26,116 @@ async function run() {
     await client.connect();
 
     const database = client.db('SilverSlice');
-    
+
     app.get('/brands', async (req, res) => {
-        const banner = database.collection('headerInfo');
-        const cursor = banner.find();
-        const results = await cursor.toArray();
-        const result = results.filter(item => item.name !== 'banner');
-        // console.log(result);
-        res.send(result);
+      const banner = database.collection('headerInfo');
+      const cursor = banner.find();
+      const results = await cursor.toArray();
+      const result = results.filter(item => item.name !== 'banner');
+      // console.log(result);
+      res.send(result);
 
     })
 
     app.get('/brands/:name', async (req, res) => {
-        const name = req.params.name
-        console.log(name);
-        const banner = database.collection('headerInfo');
-        const query = {name : name};
-        const result = await banner.findOne(query);
-        // console.log(result);
-        res.send(result);
+      const name = req.params.name
+      // console.log(name);
+      const banner = database.collection('headerInfo');
+      const query = { name: name };
+      const result = await banner.findOne(query);
+      // console.log(result);
+      res.send(result);
 
     })
 
     app.get('/products/:name', async (req, res) => {
-        const name = req.params.name
-        console.log(name);
-        const banner = database.collection('products');
-        const query = {brand : name};
-        const cursor = banner.find(query);
-        const result = await cursor.toArray();
-        // console.log(result);
-        res.send(result);
+      const name = req.params.name
+      // console.log(name);
+      const banner = database.collection('products');
+      const query = { brand: name };
+      const cursor = banner.find(query);
+      const result = await cursor.toArray();
+      // console.log(result);
+      res.send(result);
 
     })
 
     app.post('/products/:name', async (req, res) => {
-        const product = req.body
-        console.log(product);
-        const banner = database.collection('products');
-        const result = await banner.insertOne(product);
-        // console.log(result);
-        res.send(result);
+      const product = req.body
+      // console.log(product);
+      const banner = database.collection('products');
+      const result = await banner.insertOne(product);
+      // console.log(result);
+      res.send(result);
 
     })
 
     app.get('/product-details/:id', async (req, res) => {
-        const product = req.params.id
-        console.log(product);
-        const banner = database.collection('products');
-        const query = {_id: new ObjectId(product)}
-        const result = await banner.findOne(query);
-        // console.log(result);
-        res.send(result);
+      const product = req.params.id
+      // console.log(product);
+      const banner = database.collection('products');
+      const query = { _id: new ObjectId(product) }
+      const result = await banner.findOne(query);
+      // console.log(result);
+      res.send(result);
 
     })
 
     app.put('/product-details/:id', async (req, res) => {
-        const id = req.params.id
-        const product = req.body;
-        // console.log(product);
-        const banner = database.collection('products');
-        const filter = {_id: new ObjectId(id)}
-        const options = {upsert: false};
-        const updatedProduct = {
-          $set: {
-            photo: product.photo,
-            name: product.name,
-            brand: product.brand,
-            type: product.type,
-            price: product.price,
-            rating: product.rating,
-            description: product.description
-          }
+      const id = req.params.id
+      const product = req.body;
+      // console.log(product);
+      const banner = database.collection('products');
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: false };
+      const updatedProduct = {
+        $set: {
+          photo: product.photo,
+          name: product.name,
+          brand: product.brand,
+          type: product.type,
+          price: product.price,
+          rating: product.rating,
+          description: product.description
         }
-        const result = await banner.updateOne(filter, updatedProduct, options);
-        // console.log(result);
-        res.send(result);
+      }
+      const result = await banner.updateOne(filter, updatedProduct, options);
+      // console.log(result);
+      res.send(result);
+
+    })
+
+    app.get('/cart/:email', async (req, res) => {
+      const email = req.params.email
+      // console.log(name);
+      const banner = database.collection('cart');
+      const query = { email: email };
+      const cursor = banner.find(query);
+      const result = await cursor.toArray();
+      // console.log(result);
+      res.send(result);
+
+    })
+
+    app.post('/cart/:email', async (req, res) => {
+      const email = req.params.email;
+      const product = req.body;
+      // console.log(product);
+      const banner = database.collection('cart');
+      const result = await banner.insertOne(product);
+      // console.log(result);
+      res.send(result);
+
+    })
+
+    app.delete('/cart/:id', async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const banner = database.collection('cart');
+      const query = {_id: id}
+      const result = await banner.deleteOne(query);
+      // console.log(result);
+      res.send(result);
 
     })
 
@@ -118,9 +152,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Server is rinnung');
+  res.send('Server is rinnung');
 })
 
 app.listen(port, () => {
-    console.log('Server created successfuly');
+  console.log('Server created successfuly');
 })
